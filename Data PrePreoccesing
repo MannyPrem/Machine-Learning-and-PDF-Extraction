@@ -1,0 +1,17 @@
+import pandas as pd
+import scipy
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+data_set = pd.read_csv(r"C:\Users\Manue\OneDrive\Desktop\Python Programs\PDF Extraction\Data-Science-Job_Listing.csv")
+
+# Using Pandas to display the top rows of a dataframe
+print(data_set.head())
+# Checks the data info
+print(data_set.info())
+print(data_set.isnull().sum())
+print(data_set.describe())
+sns.boxplot(data_set[Salary Estimate])
+
