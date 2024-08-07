@@ -1,0 +1,68 @@
+import pdfplumber
+import pandas as pd
+import re
+#Reading and displaying the text from the first page of the PDF
+pdf=pdfplumber.open(r"C:\Users\Manue\OneDrive\Desktop\Python Programs\PDF Extraction\sample2.pdf")
+page = pdf.pages[0]
+text = page.extract_text()
+print(text)
+data_frame = pd.DataFrame()
+
+
+# Finding all rows that start with Basic, Change and Transaction
+find_basic = re.compile(r"^Basic")
+find_change = re.compile(r"^Change")
+find_transaction = re.compile(r"Transaction")
+for row in text.split("\n"):
+    if find_basic.match(row):
+        print(row)
+    if find_change.match(row):
+        print(row)
+    if find_transaction.match(row):
+        print(row)
+serv_nameb = ""
+serv_nameb_list = []
+serv_namec_list = []
+serv_namet_list = []
+
+
+#Adding the whole service description with basic in serv_nameb
+pattern_1 = re.compile(r"([^\d]+)\d.*")
+for row in text.split("\n"):
+    if find_basic.match(row):
+        match = pattern_1.match(row)
+        if match:
+            serv_nameb = match.group(1).strip()
+            amnt = re.findall(r"\d+", row)
+            serv_nameb_list.append(serv_nameb)
+        print(serv_nameb)
+#Adding the change coloum in serv_namec
+serv_namec = ""      
+pattern_2 = re.compile(r"([^\d]+)\d.*")
+for row in text.split("\n"):
+    if find_change.match(row):
+        match2 = pattern_2.match(row)
+        if match2:
+            serv_namec = match2.group(1).strip()
+            amnt = re.findall(r"\d+", row)
+            serv_namec_list.append(serv_namec)
+        print(serv_namec)
+#Adding the transaction coloum in serv_namet
+serv_namet = "" 
+numbers = ""     
+pattern_3 = re.compile(r"([^\d]+)(\d.*)?")
+for row in text.split("\n"):
+    if find_transaction.match(row):
+        match3 = pattern_3.match(row)
+        if match3:
+            serv_namet = match3.group(1).strip()
+            first_number = re.findall(r"\d+", match3.group(2))[0]
+            serv_namet += first_number
+            serv_namet_list.append(serv_namet)
+        print(serv_namet)
+        #amnt = re.findall(r"\d+", row)
+        
+# Start creating my dataframe
+all_services = serv_nameb_list + serv_namec_list + serv_namet_list
+data_frame_services = pd.DataFrame(all_services, columns=["Service Description"])
+print(data_frame_services)
