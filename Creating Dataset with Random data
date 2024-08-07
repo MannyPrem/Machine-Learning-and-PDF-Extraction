@@ -1,0 +1,34 @@
+import pandas as pd
+import random
+from faker import Faker
+import datetime
+
+random.seed(42)
+
+fake = Faker()
+sales_data = []
+# Generate 1000 rows of fake data
+data = []
+product_names = ["Widget A", "Widget B", "Gadget C", "Gadget D", 
+    "Tool E", "Tool F", "Item G", "Item H"]
+for i in range(1000):
+    city = fake.city()
+    product = random.choice(product_names)
+    price = random.randint(1, 100)
+    date = fake.date_between(start_date='-30d', end_date='today')
+    data.append([city, product, price, date])
+    
+
+# Create a DataFrame from the data
+df = pd.DataFrame(data, columns=['City', 'Product', 'Price', 'Date'])
+
+# Convert the Date column to datetime format
+df['Date'] = pd.to_datetime(df['Date'])
+
+# Sort the DataFrame by Date column in ascending order
+df = df.sort_values(by='Date')
+
+# Print the first 5 rows of the DataFrame
+print(df.head())
+    
+    
